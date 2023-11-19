@@ -91,8 +91,8 @@ user_song_list.h
 /util/wsl_downloaded
 /util/win_downloaded
 /users/
-/layouts/
-/keyboards/*
+# /layouts/
+# /keyboards/*
 
 # clangd
 compile_commands.json
