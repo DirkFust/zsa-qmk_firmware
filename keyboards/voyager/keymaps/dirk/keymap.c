@@ -122,7 +122,7 @@ bool caps_word_press_user(uint16_t keycode) {
     case KC_DEL:
     case DE_UNDS:
     case TG_UML:
-      return true;_______
+      return true;
 
     default:
       return false;  // Deactivate Caps Word.
