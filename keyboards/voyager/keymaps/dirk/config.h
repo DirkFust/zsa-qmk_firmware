@@ -9,7 +9,13 @@
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
 #define LAYER_STATE_8BIT
+
+/************************************************************************************************************************
+ *    COMBOS                                                                                                            *
+ * See https://docs.qmk.fm/#/feature_combo                                                                              *
+ ************************************************************************************************************************/
 #define COMBO_COUNT 1
+#define COMBO_ONLY_FROM_LAYER 0
 
 #define TAPPING_TERM_PER_KEY
 #define RGB_MATRIX_STARTUP_SPD 60
