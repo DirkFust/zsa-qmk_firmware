@@ -122,7 +122,7 @@ bool caps_word_press_user(uint16_t keycode) {
     case KC_DEL:
     case DE_UNDS:
     case TG_UML:
-      return true;
+      return true;_______
 
     default:
       return false;  // Deactivate Caps Word.
@@ -148,22 +148,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESCAPE, KC_F1  , KC_F2  , KC_F3  , KC_F4      , KC_F5      ,                              KC_F6    , KC_F7  , KC_F8  , KC_F9  , KC_F10  , KC_F11   ,
         KC_GRAVE , KC_AT  , KC_EXLM, KC_PERC, KC_LPRN    , KC_RPRN    ,                              KC_MINUS , KC_KP_7, KC_KP_8, KC_KP_9, KC_SLASH, KC_F12   ,
         KC_TILD  , KC_QUES, KC_AMPR, KC_PIPE, KC_LCBR    , KC_RCBR    ,                              KC_PLUS  , KC_KP_4, KC_KP_5, KC_KP_6, KC_ASTR , KC_BSPACE,
-        _________, KC_DLR , KC_LABK, KC_RABK, KC_LBRACKET, KC_RBRACKET,                              KC_DOT   , KC_KP_1, KC_KP_2, KC_KP_3, KC_EQUAL, KC_ENTER ,
-                                               _________ , _________  ,                              _________, KC_KP_0
+        XXXXXXXXX, KC_DLR , KC_LABK, KC_RABK, KC_LBRACKET, KC_RBRACKET,                              KC_DOT   , KC_KP_1, KC_KP_2, KC_KP_3, KC_EQUAL, KC_ENTER ,
+                                              _______    , _______    ,                              _______,   KC_KP_0
     ),
     [MOVEMENT] = LAYOUT_voyager(
-        _________, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , _________,                 _________, _________, _________, _________, _________, TO(GAMING),
-        _________, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , _________,                 _________, KC_LALT  , KC_LSFT  , _________, _________, _________ ,
-        _________, _________, TAB_LEFT, _______, TAB_RIGHT, _________,                 _________, _________, _________, _________, _________, _________ ,
-        _________, _________, ________, _______, _________, _________,                 _________, _________, _________, _________, _________, _________ ,
-                                                            _________    , _________,                 _________, _________
+        XXXXXXX, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
+        XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, KC_LALT, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        XXXXXXX, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        XXXXXXX, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+                                                 _______  , _______,                 _______  , _______
     ),
     [MOUSE] = LAYOUT_voyager(
-        _________, _________, _________, _________ , _________  , _________ ,                         _________ , _________    , _________    , _________     , _________, TO(BASE) ,
-        _________, _________, _________, KC_MS_UP  , _________  , _________ ,                         _________ , _________    , KC_MS_WH_UP  , _________     , _________, _________,
-        _________, _________, KC_MS_LEFT,KC_MS_DOWN, KC_MS_RIGHT, _________ ,                         _________ , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, _________, _________,
-        _________, _________, _________, _________ , _________  , _________ ,                         _________ , _________    , _________    , _________     , _________, _________,
-                                                    _________  , KC_MS_BTN1,                          KC_MS_BTN2, _________
+        XXXXXX, XXXXXX, XXXXXXXXX , KC_MS_UP  , XXXXXXXXX  , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, KC_MS_LEFT, KC_MS_DOWN, KC_MS_RIGHT, XXXXXXXXX ,                         XXXXXXXXX , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, XXXXXXXXX , XXXXXXXXX , XXXXXXXXX  , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, XXXXXXXXX , XXXXXXXXX , XXXXXXXXX  , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
+                                                XXXXXXXXX  , KC_MS_BTN1,                         KC_MS_BTN2, XXXXXXXXX
     ),
     [GAMING] = LAYOUT_voyager(
         _________, KC_1, KC_2, KC_3, KC_4, KC_5,                                                      KC_6, KC_7, KC_8    , KC_9  , KC_0     , TO(BASE)   ,
