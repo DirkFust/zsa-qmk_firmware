@@ -71,9 +71,11 @@
 #define CC_N LT(BASE, KC_N)
 #define CC_M LT(BASE, KC_M)
 #define CC_HASH LT(BASE, KC_NUHS)
-#define TG_UML OSL(UMLAUT)
+// #define TG_UML OSL(UMLAUT)
 #define TAB_LEFT LCTL(LSFT(KC_TAB))
 #define TAB_RIGHT LCTL(KC_TAB)
+
+static uint8_t is_oneshot_active = 0;
 
 enum custom_keycodes {
     RGB_SLD = ML_SAFE_RANGE,
@@ -84,6 +86,7 @@ enum custom_keycodes {
     MACRO_PARA,
     DE_LSPO,
     DE_RSPC,
+    TG_UML,
 };
 
 enum layers {
@@ -283,7 +286,16 @@ void rgb_matrix_indicators_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (is_oneshot_active > 0) is_oneshot_active++;
+    if (keycode != TG_UML && !record->event.pressed && is_oneshot_active > 1) {
+        is_oneshot_active = 0;
+        layer_off(UMLAUT);
+    }
+
     switch (keycode) {
+        case TG_UML:
+            is_oneshot_active = 1;
+            layer_on(UMLAUT);
         case CC_Q:
             return controlify_on_hold(KC_Q, record);
         case CC_W:
