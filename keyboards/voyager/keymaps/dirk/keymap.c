@@ -4,6 +4,7 @@
 #include "print.h"
 #include "version.h"
 #include "keymap_german.h"
+#include "sendstring_german.h"
 #include "tap_hold_helper.c"
 #include "color_helper.c"
 
@@ -70,23 +71,17 @@
 #define CC_B LT(BASE, KC_B)
 #define CC_N LT(BASE, KC_N)
 #define CC_M LT(BASE, KC_M)
-#define CC_HASH LT(BASE, KC_NUHS)
-// #define TG_UML OSL(UMLAUT)
+#define CC_HASH LT(BASE, CU_HASH)
 #define TAB_LEFT LCTL(LSFT(KC_TAB))
 #define TAB_RIGHT LCTL(KC_TAB)
 
-static uint8_t is_oneshot_active = 0;
+static bool is_umlaut_active = false;
 
 enum custom_keycodes {
-    RGB_SLD = ML_SAFE_RANGE,
-    MACRO_AE,
-    MACRO_SS,
-    MACRO_UE,
-    MACRO_OE,
-    MACRO_PARA,
-    DE_LSPO,
-    DE_RSPC,
-    TG_UML,
+    TG_UML= ML_SAFE_RANGE,
+    CU_SLASH,
+    CU_QUOT,
+    CU_HASH,
 };
 
 enum layers {
@@ -103,6 +98,28 @@ enum tap_dance_codes {
     TD_TAB,
 };
 
+/***********************************************************************
+ *    KEY OVERRIDES                                                    *
+ * See: https://docs.qmk.fm/#/feature_key_overrides?id=key-overrides   *
+ ***********************************************************************/
+// Used to give keys different shifted values than normal.
+// For the explanation of the layer mask: https://www.reddit.com/r/olkb/comments/q2tclt/key_override_and_layer_bitmask_howto/
+
+// const key_override_t hash_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_NUHS, KC_GRV);
+// const key_override_t quotes_key_override = ko_make_with_layers(MOD_MASK_SHIFT, DE_DQUO, DE_QUOT, 1<<SPACE_FUNCTION);
+
+const key_override_t ss_key_override = {.trigger_mods          = MOD_BIT(KC_LSFT),                       //
+                                   .suppressed_mods        = MOD_BIT(KC_LSFT),                       //
+                                   .trigger                = DE_SS,                                                     //
+                                   .replacement            = DE_SS,                                                     //
+                                   .enabled                = NULL};
+
+// This globally defines all key overrides to be used
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &ss_key_override,
+    NULL // Null terminate the array of overrides!
+};
+
 // Feature Caps Words, see https://docs.qmk.fm/#/feature_caps_word
 bool caps_word_press_user(uint16_t keycode) {
   // #ifdef CONSOLE_ENABLE
@@ -115,7 +132,6 @@ bool caps_word_press_user(uint16_t keycode) {
     case DE_ODIA:     // ö from german keyboard layout
     case DE_ADIA:     // ä from german keyboard layout
     case DE_MINS:     // -_ from german keyboard layout
-    case DE_SS:       // ß
       add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
       return true;
 
@@ -125,6 +141,7 @@ bool caps_word_press_user(uint16_t keycode) {
     case KC_DEL:
     case DE_UNDS:
     case TG_UML:
+    case DE_SS:
       return true;
 
     default:
@@ -135,13 +152,13 @@ bool caps_word_press_user(uint16_t keycode) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_voyager(
         KC_ESCAPE, CC_Q, CC_W   , CC_E    , CC_R   , CC_T,                                  CC_Y, CC_U   , CC_I    , CC_O   , CC_P   , KC_DEL ,
-        CAPS_WORD, CC_A, CC_S   , CC_D    , CC_F   , CC_G,                                  CC_H, CC_J   , CC_K    , CC_L   , KC_DQUO, CC_HASH,
+        CAPS_WORD, CC_A, CC_S   , CC_D    , CC_F   , CC_G,                                  CC_H, CC_J   , CC_K    , CC_L   , CU_QUOT, CC_HASH,
         TG_UML   , CC_Z, CC_X   , CC_C    , CC_V   , CC_B,                                  CC_N, CC_M   , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
-        KC_SLASH , DE_ADIA, KC_LALT, KC_LCTRL, KC_LGUI, ____,                               XXXX, KC_RGUI, KC_RCTRL, KC_RALT, XXXXXXX, XXXXXXX,
+        CU_SLASH , DE_ADIA, KC_LALT, KC_LCTRL, KC_LGUI, ____,                               XXXX, KC_RGUI, KC_RCTRL, KC_RALT, XXXXXXX, XXXXXXX,
               MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                  LT(MOVEMENT, KC_BSPACE), MT(MOD_LSFT, KC_SPACE)
     ),
     [UMLAUT] = LAYOUT_voyager(
-        _______, _______, _____, _______, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, _______,
+        _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, _______,
         _______, DE_ADIA, DE_SS, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
         _______, _______, _____, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
         _______, _______, _____, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
@@ -151,7 +168,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESCAPE, KC_F1  , KC_F2  , KC_F3  , KC_F4      , KC_F5      ,                              KC_F6    , KC_F7  , KC_F8  , KC_F9  , KC_F10  , KC_F11   ,
         KC_GRAVE , KC_AT  , KC_EXLM, KC_PERC, KC_LPRN    , KC_RPRN    ,                              KC_MINUS , KC_KP_7, KC_KP_8, KC_KP_9, KC_SLASH, KC_F12   ,
         KC_TILD  , KC_QUES, KC_AMPR, KC_PIPE, KC_LCBR    , KC_RCBR    ,                              KC_PLUS  , KC_KP_4, KC_KP_5, KC_KP_6, KC_ASTR , KC_BSPACE,
-        XXXXXXXXX, KC_DLR , KC_LABK, KC_RABK, KC_LBRACKET, KC_RBRACKET,                              KC_DOT   , KC_KP_1, KC_KP_2, KC_KP_3, KC_EQUAL, KC_ENTER ,
+        DE_SECT  , KC_DLR , KC_LABK, KC_RABK, KC_LBRACKET, KC_RBRACKET,                              KC_DOT   , KC_KP_1, KC_KP_2, KC_KP_3, KC_EQUAL, KC_ENTER ,
                                               _______    , _______    ,                              _______,   KC_KP_0
     ),
     [MOVEMENT] = LAYOUT_voyager(
@@ -285,17 +302,18 @@ void rgb_matrix_indicators_user(void) {
     }
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (is_oneshot_active > 0) is_oneshot_active++;
-    if (keycode != TG_UML && !record->event.pressed && is_oneshot_active > 1) {
-        is_oneshot_active = 0;
-        layer_off(UMLAUT);
-    }
+/* This function handles custom keycodes and is called in
+ * the "real" process_record_user() callback
+ */
+bool process_record_user_keys(uint16_t keycode, keyrecord_t *record) {
+switch (keycode) {
 
-    switch (keycode) {
-        case TG_UML:
-            is_oneshot_active = 1;
-            layer_on(UMLAUT);
+        case CU_SLASH:
+            return key_and_shift(DE_SLSH, DE_BSLS, record); // slash and backslash
+        case CU_QUOT:
+            return key_and_shift(DE_DQUO, DE_QUOT, record); // " and '
+        case CC_HASH:
+            return hash_tap_hold_shift(record); // # on tap, ctrl+# on hild, ` (backtick) on shift
         case CC_Q:
             return controlify_on_hold(KC_Q, record);
         case CC_W:
@@ -348,15 +366,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return controlify_on_hold(KC_N, record);
         case CC_M:
             return controlify_on_hold(KC_M, record);
-        case CC_HASH:
-            return controlify_on_hold(KC_NUHS, record);
-        case RGB_SLD:
-            if (record->event.pressed) {
-                rgblight_mode(1);
-            }
-            return false;
     }
     return true;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    #ifdef CONSOLE_ENABLE
+        uprintf("process_record_user(): KL: kc: 0x%04X, keycode: %u, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+    #endif
+
+    // handle custom "umlaut" one shot layer activation
+    if (!is_umlaut_active && keycode == TG_UML && record->event.pressed) {
+        is_umlaut_active = true;
+        layer_on(UMLAUT);
+    }
+
+    // handle keypresses
+    bool result = process_record_user_keys(keycode, record);
+
+    // handle custom "umlaut" one shot layer deactivation
+    if (is_umlaut_active && keycode != TG_UML && !record->event.pressed) {
+        is_umlaut_active = false;
+        layer_off(UMLAUT);
+    }
+
+    return result;
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
