@@ -5,23 +5,24 @@
 // Step 1.
 // Declare custom effects using the RGB_MATRIX_EFFECT macro
 // (note the lack of semicolon after the macro!)
-RGB_MATRIX_EFFECT(custom_gaming)
+RGB_MATRIX_EFFECT(overwatch)
 
 // Step 2.
 // Define effects inside the `RGB_MATRIX_CUSTOM_EFFECT_IMPLS` ifdef block
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
 // e.g: A simple effect, self-contained within a single method
-static bool custom_gaming(effect_params_t* params) {
+static bool overwatch(effect_params_t* params) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
     #ifdef CONSOLE_ENABLE
-      uprintf("custom_gaming(): min %u, max %u\n", led_min, led_max);
+      uprintf("overwatch(): min %u, max %u\n", led_min, led_max);
     #endif
 
     HSV red     = {0, 255, 255};
     HSV green   = {85, 255, 255};
     HSV blue    = {170, 255, 255};
     HSV magenta = {213, 255, 255};
+    HSV yellow  = {41,255,255};
     HSV white   = {0, 0, 64};
     // HSV off     = {0, 0, 0};
 
@@ -35,15 +36,18 @@ static bool custom_gaming(effect_params_t* params) {
             case 31:
                 color = red;
                 break;
-            case 4:
+            case 3:
             case 8 ... 10:
                 color = green;
                 break;
-            case 5:
+            case 4:
             case 7:
                 color = blue;
                 break;
-            case 1:
+            case 16:
+                color = yellow;
+                break;
+            case 2:
                 color = magenta;
                 break;
             default:

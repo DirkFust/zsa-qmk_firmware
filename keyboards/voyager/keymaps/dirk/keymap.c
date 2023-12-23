@@ -171,97 +171,56 @@ void keyboard_post_init_user(void) {
     defer_exec(5000, change_led_effect_heatmap_callback, NULL);
 }
 
-// const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
-//     [2] = {{74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}},
-
-//     [3] = {{169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {0, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}},
-
-//     [4] = {{0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {74, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}},
-
-//     [5] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 255}, {41, 255, 255}, {74, 255, 255}, {41, 255, 255}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 119}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-
-// };
-
 layer_state_t layer_state_set_user(layer_state_t state) {
     uint8_t new_layer = get_highest_layer(state);
-    //uprintf("old_layer: %u, highest_layer %u, state: %u", current_layer, new_layer, state);
-    current_layer = new_layer;
+
+    if (current_layer != new_layer) {
+        switch (new_layer) {
+        case SYM_NUM:
+            #ifdef CONSOLE_ENABLE
+              print("layer: SYM_NUM\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv(HSV_GREEN);
+            break;
+        case MOVEMENT:
+            #ifdef CONSOLE_ENABLE
+              print("layer: MOVEMENT\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv(HSV_BLUE);
+            break;
+        case MOUSE:
+            #ifdef CONSOLE_ENABLE
+              print("layer: MOUSE\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv(HSV_RED);
+            break;
+        case BASE:
+            #ifdef CONSOLE_ENABLE
+              print("layer: BASE\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+            break;
+        case GAMING:
+            #ifdef CONSOLE_ENABLE
+                print("layer: GAMING\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_CUSTOM_overwatch);
+            break;
+        default:
+            #ifdef CONSOLE_ENABLE
+              print("layer: DEFAULT\n");
+            #endif
+            rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+            break;
+        }
+        current_layer = new_layer;
+    }
+
     return state;
 }
-//layer_state_t layer_state_set_user(layer_state_t state) {
-//     uint8_t new_layer = get_highest_layer(state);
-
-//     switch (new_layer) {
-//       case SYM_NUM:
-//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-//         rgb_matrix_sethsv(HSV_GREEN);
-//         break;
-//       case MOVEMENT:
-//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-//         rgb_matrix_sethsv(HSV_BLUE);
-//         break;
-//       case MOUSE:
-//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-//         rgb_matrix_sethsv(HSV_RED);
-//         break;
-//       case BASE:
-//         rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
-//         break;
-//       // case GAMING:
-//       //   rgb_matrix_mode(RGB_MATRIX_CUSTOM_custom_gaming);
-//       //   break;
-//       default:
-//         rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
-//         break;
-//     }
-
-//     current_layer = new_layer;
-//     return state;
-// }
-
-// void set_layer_color(int layer) {
-//     #ifdef CONSOLE_ENABLE
-//         uprintf("set_layer_color(): layer %u\n", layer);
-//     #endif
-//     for (int i = 0; i < DRIVER_LED_TOTAL; i++) {
-//         HSV hsv = {
-//             .h = pgm_read_byte(&ledmap[layer][i][0]),
-//             .s = pgm_read_byte(&ledmap[layer][i][1]),
-//             .v = pgm_read_byte(&ledmap[layer][i][2]),
-//         };
-//         if (!hsv.h && !hsv.s && !hsv.v) {
-//             rgb_matrix_set_color(i, 0, 0, 0);
-//         } else {
-//             // RGB   rgb = hsv_to_rgb(hsv);
-//             // float f   = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-//             // rgb_matrix_set_color(i, f * rgb.r, f * rgb.g, f * rgb.b);
-//             rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
-//         }
-//     }
-// }
-
-// void rgb_matrix_indicators_user(void) {
-//     if (keyboard_config.disable_layer_led) {
-//         return;
-//     }
-//     switch (biton32(layer_state)) {
-//         case 2:
-//             set_layer_color(2);
-//             break;
-//         case 3:
-//             set_layer_color(3);
-//             break;
-//         case 4:
-//             set_layer_color(4);
-//             break;
-//         case 5:
-//             set_layer_color(5);
-//             break;
-//         default:
-//             if (rgb_matrix_get_flags() == LED_FLAG_NONE) rgb_matrix_set_color_all(0, 0, 0);
-//             break;
-//     }
-// }
 
 /* This function handles custom keycodes and is called in
  * the "real" process_record_user() callback
