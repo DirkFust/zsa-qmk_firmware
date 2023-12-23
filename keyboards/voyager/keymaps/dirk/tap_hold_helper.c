@@ -43,10 +43,8 @@ bool hash_tap_hold_shift(keyrecord_t *record) {
 
     uint8_t mod_state = get_mods();
     if (record->event.pressed) {
-        if (get_mods() & MOD_MASK_SHIFT) {
-            del_mods(MOD_MASK_SHIFT);
-            SEND_STRING(SS_LALT(SS_TAP(X_KP_9) SS_TAP(X_KP_6)));
-            set_mods(mod_state);
+        if (mod_state & MOD_MASK_SHIFT) {
+            tap_code16(DE_HASH);
         } else {
             SEND_STRING(SS_LALT(SS_TAP(X_KP_3) SS_TAP(X_KP_5)));
         }

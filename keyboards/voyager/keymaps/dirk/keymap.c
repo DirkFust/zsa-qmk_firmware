@@ -4,7 +4,6 @@
 #include "print.h"
 #include "version.h"
 #include "keymap_german.h"
-#include "sendstring_german.h"
 #include "tap_hold_helper.c"
 #include "color_helper.c"
 
@@ -45,43 +44,18 @@
 #define XXXXXXXX KC_NO
 #define XXXXXXXXX KC_NO
 
-#define CC_Q LT(BASE, KC_Q)
-#define CC_W LT(BASE, KC_W)
-#define CC_E LT(BASE, KC_E)
-#define CC_R LT(BASE, KC_R)
-#define CC_T LT(BASE, KC_T)
-#define CC_Z LT(BASE, KC_Z)
-#define CC_U LT(BASE, KC_U)
-#define CC_I LT(BASE, KC_I)
-#define CC_O LT(BASE, KC_O)
-#define CC_P LT(BASE, KC_P)
-#define CC_A LT(BASE, KC_A)
-#define CC_S LT(BASE, KC_S)
-#define CC_D LT(BASE, KC_D)
-#define CC_F LT(BASE, KC_F)
-#define CC_G LT(BASE, KC_G)
-#define CC_H LT(BASE, KC_H)
-#define CC_J LT(BASE, KC_J)
-#define CC_K LT(BASE, KC_K)
-#define CC_L LT(BASE, KC_L)
-#define CC_Y LT(BASE, KC_Y)
-#define CC_X LT(BASE, KC_X)
-#define CC_C LT(BASE, KC_C)
-#define CC_V LT(BASE, KC_V)
-#define CC_B LT(BASE, KC_B)
-#define CC_N LT(BASE, KC_N)
-#define CC_M LT(BASE, KC_M)
-#define CC_HASH LT(BASE, CU_HASH)
 #define TAB_LEFT LCTL(LSFT(KC_TAB))
 #define TAB_RIGHT LCTL(KC_TAB)
 
 static bool is_umlaut_active = false;
+static uint8_t current_layer = 0;
 
 enum custom_keycodes {
     TG_UML= ML_SAFE_RANGE,
-    CU_SLASH,
-    CU_QUOT,
-    CU_HASH,
+    CU_SLASH, // / and backslash
+    CU_QUOT,  // " and '
+    CU_HASH,  // # ans `
+    CU_SS,    // ß
 };
 
 enum layers {
@@ -91,34 +65,8 @@ enum layers {
     MOVEMENT,
     MOUSE,
     GAMING,
-
 };
 
-enum tap_dance_codes {
-    TD_TAB,
-};
-
-/***********************************************************************
- *    KEY OVERRIDES                                                    *
- * See: https://docs.qmk.fm/#/feature_key_overrides?id=key-overrides   *
- ***********************************************************************/
-// Used to give keys different shifted values than normal.
-// For the explanation of the layer mask: https://www.reddit.com/r/olkb/comments/q2tclt/key_override_and_layer_bitmask_howto/
-
-// const key_override_t hash_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_NUHS, KC_GRV);
-// const key_override_t quotes_key_override = ko_make_with_layers(MOD_MASK_SHIFT, DE_DQUO, DE_QUOT, 1<<SPACE_FUNCTION);
-
-const key_override_t ss_key_override = {.trigger_mods          = MOD_BIT(KC_LSFT),                       //
-                                   .suppressed_mods        = MOD_BIT(KC_LSFT),                       //
-                                   .trigger                = DE_SS,                                                     //
-                                   .replacement            = DE_SS,                                                     //
-                                   .enabled                = NULL};
-
-// This globally defines all key overrides to be used
-const key_override_t **key_overrides = (const key_override_t *[]){
-    &ss_key_override,
-    NULL // Null terminate the array of overrides!
-};
 
 // Feature Caps Words, see https://docs.qmk.fm/#/feature_caps_word
 bool caps_word_press_user(uint16_t keycode) {
@@ -142,6 +90,7 @@ bool caps_word_press_user(uint16_t keycode) {
     case DE_UNDS:
     case TG_UML:
     case DE_SS:
+    case CU_SS:
       return true;
 
     default:
@@ -151,32 +100,32 @@ bool caps_word_press_user(uint16_t keycode) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_voyager(
-        KC_ESCAPE, CC_Q, CC_W   , CC_E    , CC_R   , CC_T,                                  CC_Y, CC_U   , CC_I    , CC_O   , CC_P   , KC_DEL ,
-        CAPS_WORD, CC_A, CC_S   , CC_D    , CC_F   , CC_G,                                  CC_H, CC_J   , CC_K    , CC_L   , CU_QUOT, CC_HASH,
-        TG_UML   , CC_Z, CC_X   , CC_C    , CC_V   , CC_B,                                  CC_N, CC_M   , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
-        CU_SLASH , DE_ADIA, KC_LALT, KC_LCTRL, KC_LGUI, ____,                               XXXX, KC_RGUI, KC_RCTRL, KC_RALT, XXXXXXX, XXXXXXX,
+        KC_ESCAPE, KC_Q    , KC_W   , KC_E    , KC_R   , KC_T,                              KC_Y, KC_U   , KC_I    , KC_O   , KC_P   , KC_DEL ,
+        CAPS_WORD, KC_A    , KC_S   , KC_D    , KC_F   , KC_G,                              KC_H, KC_J   , KC_K    , KC_L   , CU_QUOT, CU_HASH,
+        TG_UML   , KC_Z    , KC_X   , KC_C    , KC_V   , KC_B,                              KC_N, KC_M   , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
+        XXXXXXXXX, CU_SLASH, KC_LALT, KC_LCTRL, KC_LGUI, ____,                              XXXX, KC_RGUI, KC_RCTRL, KC_RALT, XXXXXXX, XXXXXXX,
               MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                  LT(MOVEMENT, KC_BSPACE), MT(MOD_LSFT, KC_SPACE)
     ),
     [UMLAUT] = LAYOUT_voyager(
         _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, _______,
-        _______, DE_ADIA, DE_SS, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
+        _______, DE_ADIA, CU_SS, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
         _______, _______, _____, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
         _______, _______, _____, _______, _______, _______,                             _______, _______, _______, _______, _______, _______,
                                           _______, _______,                             _______, _______
     ),
     [SYM_NUM] = LAYOUT_voyager(
-        KC_ESCAPE, KC_F1  , KC_F2  , KC_F3  , KC_F4      , KC_F5      ,                              KC_F6    , KC_F7  , KC_F8  , KC_F9  , KC_F10  , KC_F11   ,
-        KC_GRAVE , KC_AT  , KC_EXLM, KC_PERC, KC_LPRN    , KC_RPRN    ,                              KC_MINUS , KC_KP_7, KC_KP_8, KC_KP_9, KC_SLASH, KC_F12   ,
-        KC_TILD  , KC_QUES, KC_AMPR, KC_PIPE, KC_LCBR    , KC_RCBR    ,                              KC_PLUS  , KC_KP_4, KC_KP_5, KC_KP_6, KC_ASTR , KC_BSPACE,
-        DE_SECT  , KC_DLR , KC_LABK, KC_RABK, KC_LBRACKET, KC_RBRACKET,                              KC_DOT   , KC_KP_1, KC_KP_2, KC_KP_3, KC_EQUAL, KC_ENTER ,
-                                              _______    , _______    ,                              _______,   KC_KP_0
+        KC_ESCAPE, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                              KC_F6      , KC_F7  , KC_F8  , KC_F9  , KC_F10  , KC_F11   ,
+        DE_EQL   , DE_DEG , DE_EXLM, DE_PERC, DE_LPRN, DE_RPRN,                              KC_PMNS    , KC_KP_7, KC_KP_8, KC_KP_9, KC_PSLS , KC_F12   ,
+        DE_TILD  , DE_QUES, DE_AMPR, DE_PIPE, DE_LCBR, DE_RCBR,                              KC_PPLS    , KC_KP_4, KC_KP_5, KC_KP_6, KC_PAST , KC_BSPACE,
+        DE_SECT  , DE_DLR , DE_LABK, DE_RABK, DE_LBRC, DE_RBRC,                              KC_DOT     , KC_KP_1, KC_KP_2, KC_KP_3, KC_COMM , KC_ENTER ,
+                                               ______, _______,                              _________  , KC_KP_0
     ),
     [MOVEMENT] = LAYOUT_voyager(
         XXXXXXX, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
         XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, KC_LALT, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXXXX ,
         XXXXXXX, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
         XXXXXXX, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
-                                                 _______  , _______,                 _______  , _______
+                                                 _______, _______,                 _______  , _______
     ),
     [MOUSE] = LAYOUT_voyager(
         XXXXXX, XXXXXX, XXXXXXXXX , KC_MS_UP  , XXXXXXXXX  , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
@@ -210,170 +159,147 @@ combo_t key_combos[COMBO_COUNT] = {
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)
 // A key counts as HOLD if held longer than TAPPING_TERM, as TAP/DOUBLE TAP if shorter
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case CC_Q:
-        case CC_W:
-        case CC_E:
-        case CC_R:
-        case CC_T:
-        case CC_Z:
-        case CC_U:
-        case CC_I:
-        case CC_O:
-        case CC_P:
-        case CC_A:
-        case CC_S:
-        case CC_D:
-        case CC_F:
-        case CC_G:
-        case CC_H:
-        case CC_J:
-        case CC_K:
-        case CC_L:
-        case CC_Y:
-        case CC_X:
-        // case CC_C:
-        case CC_V:
-        case CC_B:
-        case CC_N:
-        case CC_M:
-        case CC_HASH:
-            // Make all holds but copy (KC_C) slower
-            return TAPPING_TERM * 1.25;
-        default:
-            return TAPPING_TERM;
-    }
+    return TAPPING_TERM;
 }
 
-extern rgb_config_t rgb_matrix_config;
+// extern rgb_config_t rgb_matrix_config;
 
 void keyboard_post_init_user(void) {
     rgb_matrix_enable();
+
+    rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+    defer_exec(5000, change_led_effect_heatmap_callback, NULL);
 }
 
-const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
-    [2] = {{74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}},
+// const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
+//     [2] = {{74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}},
 
-    [3] = {{169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {0, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}},
+//     [3] = {{169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {0, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}, {169, 255, 255}},
 
-    [4] = {{0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {74, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}},
+//     [4] = {{0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {74, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}, {0, 255, 255}},
 
-    [5] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 255}, {41, 255, 255}, {74, 255, 255}, {41, 255, 255}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 119}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+//     [5] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 255}, {41, 255, 255}, {74, 255, 255}, {41, 255, 255}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {74, 255, 255}, {74, 255, 255}, {74, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {169, 255, 255}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 255, 119}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
 
-};
+// };
 
-void set_layer_color(int layer) {
-    for (int i = 0; i < DRIVER_LED_TOTAL; i++) {
-        HSV hsv = {
-            .h = pgm_read_byte(&ledmap[layer][i][0]),
-            .s = pgm_read_byte(&ledmap[layer][i][1]),
-            .v = pgm_read_byte(&ledmap[layer][i][2]),
-        };
-        if (!hsv.h && !hsv.s && !hsv.v) {
-            rgb_matrix_set_color(i, 0, 0, 0);
-        } else {
-            RGB   rgb = hsv_to_rgb(hsv);
-            float f   = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-            rgb_matrix_set_color(i, f * rgb.r, f * rgb.g, f * rgb.b);
-        }
-    }
+layer_state_t layer_state_set_user(layer_state_t state) {
+    uint8_t new_layer = get_highest_layer(state);
+    //uprintf("old_layer: %u, highest_layer %u, state: %u", current_layer, new_layer, state);
+    current_layer = new_layer;
+    return state;
 }
+//layer_state_t layer_state_set_user(layer_state_t state) {
+//     uint8_t new_layer = get_highest_layer(state);
 
-void rgb_matrix_indicators_user(void) {
-    if (keyboard_config.disable_layer_led) {
-        return;
-    }
-    switch (biton32(layer_state)) {
-        case 2:
-            set_layer_color(2);
-            break;
-        case 3:
-            set_layer_color(3);
-            break;
-        case 4:
-            set_layer_color(4);
-            break;
-        case 5:
-            set_layer_color(5);
-            break;
-        default:
-            if (rgb_matrix_get_flags() == LED_FLAG_NONE) rgb_matrix_set_color_all(0, 0, 0);
-            break;
-    }
-}
+//     switch (new_layer) {
+//       case SYM_NUM:
+//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+//         rgb_matrix_sethsv(HSV_GREEN);
+//         break;
+//       case MOVEMENT:
+//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+//         rgb_matrix_sethsv(HSV_BLUE);
+//         break;
+//       case MOUSE:
+//         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+//         rgb_matrix_sethsv(HSV_RED);
+//         break;
+//       case BASE:
+//         rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+//         break;
+//       // case GAMING:
+//       //   rgb_matrix_mode(RGB_MATRIX_CUSTOM_custom_gaming);
+//       //   break;
+//       default:
+//         rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+//         break;
+//     }
+
+//     current_layer = new_layer;
+//     return state;
+// }
+
+// void set_layer_color(int layer) {
+//     #ifdef CONSOLE_ENABLE
+//         uprintf("set_layer_color(): layer %u\n", layer);
+//     #endif
+//     for (int i = 0; i < DRIVER_LED_TOTAL; i++) {
+//         HSV hsv = {
+//             .h = pgm_read_byte(&ledmap[layer][i][0]),
+//             .s = pgm_read_byte(&ledmap[layer][i][1]),
+//             .v = pgm_read_byte(&ledmap[layer][i][2]),
+//         };
+//         if (!hsv.h && !hsv.s && !hsv.v) {
+//             rgb_matrix_set_color(i, 0, 0, 0);
+//         } else {
+//             // RGB   rgb = hsv_to_rgb(hsv);
+//             // float f   = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+//             // rgb_matrix_set_color(i, f * rgb.r, f * rgb.g, f * rgb.b);
+//             rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+//         }
+//     }
+// }
+
+// void rgb_matrix_indicators_user(void) {
+//     if (keyboard_config.disable_layer_led) {
+//         return;
+//     }
+//     switch (biton32(layer_state)) {
+//         case 2:
+//             set_layer_color(2);
+//             break;
+//         case 3:
+//             set_layer_color(3);
+//             break;
+//         case 4:
+//             set_layer_color(4);
+//             break;
+//         case 5:
+//             set_layer_color(5);
+//             break;
+//         default:
+//             if (rgb_matrix_get_flags() == LED_FLAG_NONE) rgb_matrix_set_color_all(0, 0, 0);
+//             break;
+//     }
+// }
 
 /* This function handles custom keycodes and is called in
  * the "real" process_record_user() callback
  */
 bool process_record_user_keys(uint16_t keycode, keyrecord_t *record) {
 switch (keycode) {
-
-        case CU_SLASH:
-            return key_and_shift(DE_SLSH, DE_BSLS, record); // slash and backslash
-        case CU_QUOT:
-            return key_and_shift(DE_DQUO, DE_QUOT, record); // " and '
-        case CC_HASH:
-            return hash_tap_hold_shift(record); // # on tap, ctrl+# on hild, ` (backtick) on shift
-        case CC_Q:
-            return controlify_on_hold(KC_Q, record);
-        case CC_W:
-            return controlify_on_hold(KC_W, record);
-        case CC_E:
-            return controlify_on_hold(KC_E, record);
-        case CC_R:
-            return controlify_on_hold(KC_R, record);
-        case CC_T:
-            return controlify_on_hold(KC_T, record);
-        case CC_Z:
-            return controlify_on_hold(KC_Z, record);
-        case CC_U:
-            return controlify_on_hold(KC_U, record);
-        case CC_I:
-            return controlify_on_hold(KC_I, record);
-        case CC_O:
-            return controlify_on_hold(KC_O, record);
-        case CC_P:
-            return controlify_on_hold(KC_P, record);
-        case CC_A:
-            return controlify_on_hold(KC_A, record);
-        case CC_S:
-            return controlify_on_hold(KC_S, record);
-        case CC_D:
-            return controlify_on_hold(KC_D, record);
-        case CC_F:
-            return controlify_on_hold(KC_F, record);
-        case CC_G:
-            return controlify_on_hold(KC_G, record);
-        case CC_H:
-            return controlify_on_hold(KC_H, record);
-        case CC_J:
-            return controlify_on_hold(KC_J, record);
-        case CC_K:
-            return controlify_on_hold(KC_K, record);
-        case CC_L:
-            return controlify_on_hold(KC_L, record);
-        case CC_Y:
-            return controlify_on_hold(KC_Y, record);
-        case CC_X:
-            return controlify_on_hold(KC_X, record);
-        case CC_C:
-            return controlify_on_hold(KC_C, record);
-        case CC_V:
-            return controlify_on_hold(KC_V, record);
-        case CC_B:
-            return controlify_on_hold(KC_B, record);
-        case CC_N:
-            return controlify_on_hold(KC_N, record);
-        case CC_M:
-            return controlify_on_hold(KC_M, record);
-    }
-    return true;
+    case CU_SLASH:
+        return key_and_shift(DE_SLSH, DE_BSLS, record); // slash and backslash
+    case CU_QUOT:
+        return key_and_shift(DE_DQUO, DE_QUOT, record); // " and '
+    case CU_HASH:
+        if (record->event.pressed) {
+            if (get_mods() & MOD_MASK_SHIFT) {
+                tap_code16(DE_ACUT);
+                tap_code16(KC_SPACE);
+            } else {
+                tap_code16(DE_HASH);
+            }
+        }
+        return true;
+    case CU_SS:
+        if (record->event.pressed) {
+            uint8_t mod_state = get_mods();
+            del_mods(mod_state);
+            tap_code16(DE_SS);
+            set_mods(mod_state);
+        }
+        return true;
+    // case CC_Q:
+    //     return controlify_on_hold(KC_Q, record);
+}
+return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    #ifdef CONSOLE_ENABLE
-        uprintf("process_record_user(): KL: kc: 0x%04X, keycode: %u, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
-    #endif
+    // #ifdef CONSOLE_ENABLE
+    //     uprintf("process_record_user(): KL: kc: 0x%04X, keycode: %u, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+    // #endif
 
     // handle custom "umlaut" one shot layer activation
     if (!is_umlaut_active && keycode == TG_UML && record->event.pressed) {
@@ -392,34 +318,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return result;
 }
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    // [CC_Q]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_0, dance_0_finished, dance_0_reset),
-    // [CC_W]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_1, dance_1_finished, dance_1_reset),
-    // [CC_E]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_2, dance_2_finished, dance_2_reset),
-    // [CC_R]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_3, dance_3_finished, dance_3_reset),
-    // [CC_T]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_4, dance_4_finished, dance_4_reset),
-    // [CC_A]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_5, dance_5_finished, dance_5_reset),
-    // [CC_S]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_6, dance_6_finished, dance_6_reset),
-    // [CC_D]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_7, dance_7_finished, dance_7_reset),
-    // [CC_F]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_8, dance_8_finished, dance_8_reset),
-    // [CC_G]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_9, dance_9_finished, dance_9_reset),
-    // [CC_Y]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_10, dance_10_finished, dance_10_reset),
-    // [CC_X]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_11, dance_11_finished, dance_11_reset),
-    // [CC_C]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_12, dance_12_finished, dance_12_reset),
-    // [CC_V]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_13, dance_13_finished, dance_13_reset),
-    // [CC_B]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_14, dance_14_finished, dance_14_reset),
-    // [TD_TAB]  = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_15, dance_15_finished, dance_15_reset),
-    // [CC_Z]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_16, dance_16_finished, dance_16_reset),
-    // [CC_U]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_17, dance_17_finished, dance_17_reset),
-    // [CC_I]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_18, dance_18_finished, dance_18_reset),
-    // [CC_O]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_19, dance_19_finished, dance_19_reset),
-    // [CC_P]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_20, dance_20_finished, dance_20_reset),
-    // [CC_H]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_21, dance_21_finished, dance_21_reset),
-    // [CC_J]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_22, dance_22_finished, dance_22_reset),
-    // [CC_K]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_23, dance_23_finished, dance_23_reset),
-    // [CC_L]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_24, dance_24_finished, dance_24_reset),
-    // [CC_HASH] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_25, dance_25_finished, dance_25_reset),
-    // [CC_N]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_26, dance_26_finished, dance_26_reset),
-    // [CC_M]    = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_27, dance_27_finished, dance_27_reset),
-};
