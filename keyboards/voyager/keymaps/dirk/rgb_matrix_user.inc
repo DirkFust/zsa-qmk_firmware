@@ -36,18 +36,18 @@ static bool overwatch(effect_params_t* params) {
             case 31:
                 color = red;
                 break;
-            case 3:
-            case 8 ... 10:
+            case 9:
+            case 14 ... 16:
                 color = green;
                 break;
-            case 4:
-            case 7:
+            case 10:
+            case 13:
                 color = blue;
                 break;
-            case 16:
+            case 22:
                 color = yellow;
                 break;
-            case 2:
+            case 8:
                 color = magenta;
                 break;
             default:
