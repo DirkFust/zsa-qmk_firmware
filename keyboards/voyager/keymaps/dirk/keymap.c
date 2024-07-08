@@ -36,6 +36,9 @@
 #define _______ KC_TRANSPARENT
 #define ________ KC_TRANSPARENT
 #define _________ KC_TRANSPARENT
+#define ___________ KC_TRANSPARENT
+#define ____________ KC_TRANSPARENT
+
 
 #define XXXX KC_NO
 #define XXXXX KC_NO
@@ -93,6 +96,9 @@ bool caps_word_press_user(uint16_t keycode) {
     case TG_UML:
     case DE_SS:
     case CU_SS:
+    case KC_LEFT:
+    case KC_RIGHT:
+    case LT(MOVEMENT, KC_BSPACE):
       return true;
 
     default:
@@ -102,11 +108,11 @@ bool caps_word_press_user(uint16_t keycode) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_voyager(
-        KC_ESCAPE   , KC_Q    , KC_W   , KC_E    , KC_R   , KC_T,                              KC_Y, KC_U   , KC_I    , KC_O   , KC_P   , KC_DEL ,
-        TG_UML      , KC_A    , KC_S   , KC_D    , KC_F   , KC_G,                              KC_H, KC_J   , KC_K    , KC_L   , CU_QUOT, CU_HASH,
-        CAPS_WORD   , KC_Z    , KC_X   , KC_C    , KC_V   , KC_B,                              KC_N, KC_M   , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
-        TG(FUNCTION), CU_SLASH, KC_LALT, KC_LCTRL, KC_LGUI, ____,                              XXXX, KC_RGUI, KC_RCTRL, KC_RALT, XXXXXXX, XXXXXXX,
-                     MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                              LT(MOVEMENT, KC_BSPACE), MT(MOD_LSFT, KC_SPACE)
+        KC_ESCAPE    , KC_Q    , KC_W   , KC_E    , KC_R     , KC_T   ,                              KC_Y       , KC_U      , KC_I    , KC_O   , KC_P   , KC_DEL ,
+        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G   ,                              KC_H       , KC_J      , KC_K    , KC_L   , CU_QUOT, CU_HASH,
+        CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B   ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
+        OSL(FUNCTION), CU_SLASH, KC_LALT, KC_LCTRL, KC_LSHIFT, KC_LGUI,                              KC_RGUI    , KC_LSHIFT , KC_LCTRL, KC_LALT, XXXXXXX, XXXXXXX,
+                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                              LT(MOVEMENT, KC_BSPACE), MT(MOD_LSFT, KC_SPACE)
     ),
     [UMLAUT] = LAYOUT_voyager(
         _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, KC_PSCR,
@@ -123,18 +129,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                ______, _______,                             _______, _______
     ),
     [MOVEMENT] = LAYOUT_voyager(
-        XXXXXXX, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
-        XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, KC_LALT, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXXXX ,
-        XXXXXXX, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
-        XXXXXXX, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        XXXXXXX, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, TO(GAMING),
+        XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, KC_LSFT, KC_LCTRL, KC_LALT, XXXXXXX, XXXXXXXXX ,
+        XXXXXXX, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXXXX ,
                                                  _______, _______,                 _______  , _______
     ),
     [MOUSE] = LAYOUT_voyager(
         XXXXXX, XXXXXX, XXXXXXXXX   , KC_MS_UP    , XXXXXXXXX   , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
         XXXXXX, XXXXXX, KC_MS_LEFT  , KC_MS_DOWN  , KC_MS_RIGHT , XXXXXXXXX ,                         XXXXXXXXX , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, XXXXXX, XXXXXX,
         XXXXXX, XXXXXX, XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,                         XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
-                                                XXXXXXXXX  , KC_MS_BTN1,                         KC_MS_BTN2, XXXXXXXXX
+        XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,                         XXXXXXXXX , ____________ , ____________ , ____________  , XXXXXX, XXXXXX,
+                                                     XXXXXXXXX  , KC_MS_BTN1,                         KC_MS_BTN2, XXXXXXXXX
     ),
     [GAMING] = LAYOUT_voyager(
         _________, KC_1, KC_2, KC_3, KC_4, KC_5,                                                      KC_6, KC_7, KC_8    , KC_9  , KC_0     , TO(BASE)   ,
@@ -148,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F5, KC_F6 , KC_F7 , KC_F8 , XXXXXX,
         ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F9, KC_F10, KC_F11, KC_F12, XXXXXX,
         TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, XXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,
-                                     _________, _________,                                            _________, _________
+                                          ______, ______,                                            ______, _________
     ),
 };
 

@@ -5,10 +5,12 @@
 #define ORYX_CONFIGURATOR
 #define IGNORE_MOD_TAP_INTERRUPT
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define FIRMWARE_VERSION u8"al9ov/xO3zK"
+#define FIRMWARE_VERSION u8"al9ov/jx4L7"
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
 #define LAYER_STATE_8BIT
+#define ONESHOT_TAP_TOGGLE 3 /* Tapping this number of times holds the key until tapped once again. */
+#define ONESHOT_TIMEOUT 5000 /* Time (in ms) before the one shot key is released */
 
 /************************************************************************************************************************
  *    COMBOS                                                                                                            *
