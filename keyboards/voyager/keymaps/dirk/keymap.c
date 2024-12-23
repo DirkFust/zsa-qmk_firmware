@@ -164,11 +164,72 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * !! When new combos are declared, COMBO_COUNT in config.h must be adjusted to the new number! !!                      *
  ************************************************************************************************************************/
 
-// Combos are declared on the keycodes of the base layer (see #define COMBO_ONLY_FROM_LAYER 0 in config.h), so other layers work with them, even if the keys are set to NO_OP
-const uint16_t PROGMEM enter_mouse[] = {LT(MOVEMENT, KC_BSPACE), LT(SYM_NUM, KC_TAB), COMBO_END};
+// define combo names
+enum combos {
+    COMBO_TOGGLE_MOUSE,
 
-combo_t key_combos[COMBO_COUNT] = {
-    COMBO(enter_mouse, TG(MOUSE)),
+    COMBO_LSHIFT,
+    COMBO_LCTRL,
+    COMBO_LALT,
+    COMBO_LCTRL_SHIFT,
+    COMBO_LCTRL_ALT,
+    COMBO_LCTRL_ALT_SHIFT,
+    COMBO_LALT_SHIFT,
+
+    COMBO_RSHIFT,
+    COMBO_RCTRL,
+    COMBO_RALT,
+    COMBO_RCTRL_SHIFT,
+    COMBO_RCTRL_ALT,
+    COMBO_RCTRL_ALT_SHIFT,
+    COMBO_RALT_SHIFT,
+
+    // nifty trick to auto-specify how many combos you have
+    COMBO_LENGTH
+};
+
+// nifty trick continued
+uint16_t COMBO_LEN = COMBO_LENGTH;
+
+// define keys that make up combos
+// Combos are declared on the keycodes of the base layer (see #define COMBO_ONLY_FROM_LAYER 0 in config.h), so other layers work with them, even if the keys are set to NO_OP
+const uint16_t PROGMEM toggle_mouse[] = {LT(MOVEMENT, KC_BSPACE), LT(SYM_NUM, KC_TAB), COMBO_END};
+const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM sd_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM as_combo[] = {KC_A, KC_S, COMBO_END};
+const uint16_t PROGMEM sdf_combo[] = {KC_S, KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM adf_combo[] = {KC_A, KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM asd_combo[] = {KC_A, KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM asdf_combo[] = {KC_A, KC_S, KC_D, KC_F, COMBO_END};
+
+const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM kl_combo[] = {KC_K, KC_L, COMBO_END};
+const uint16_t PROGMEM lquot_combo[] = {KC_L, CU_QUOT, COMBO_END};
+const uint16_t PROGMEM jkl_combo[] = {KC_J, KC_K, KC_L, COMBO_END};
+const uint16_t PROGMEM jkquot_combo[] = {KC_J, KC_K, CU_QUOT, COMBO_END};
+const uint16_t PROGMEM klquot_combo[] = {KC_K, KC_L, CU_QUOT, COMBO_END};
+const uint16_t PROGMEM jklquot_combo[] = {KC_J, KC_K, KC_L, CU_QUOT, COMBO_END};
+
+// map combo names to their keys and the key they trigger
+combo_t key_combos[] = {
+    [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)),
+
+    [COMBO_LSHIFT] = COMBO(df_combo, KC_LSFT),
+    [COMBO_LCTRL] = COMBO(sd_combo, KC_LCTL),
+    [COMBO_LALT] = COMBO(as_combo, KC_LALT),
+    [COMBO_LCTRL_SHIFT] = COMBO(sdf_combo, LCTL(KC_LSFT)),
+    [COMBO_LCTRL_ALT] = COMBO(asd_combo, LCTL(KC_LALT)),
+    [COMBO_LALT_SHIFT] = COMBO(adf_combo, LALT(KC_LSFT)),
+    [COMBO_LCTRL_ALT_SHIFT] = COMBO(asdf_combo, LCTL(LALT(KC_LSFT))),
+
+    [COMBO_RSHIFT] = COMBO(jk_combo, KC_LSFT),
+    [COMBO_RCTRL] = COMBO(kl_combo, KC_LCTL),
+    [COMBO_RALT] = COMBO(lquot_combo, KC_LALT),
+    [COMBO_RCTRL_SHIFT] = COMBO(jkl_combo,  LCTL(KC_LSFT)),
+    [COMBO_RCTRL_ALT] = COMBO(klquot_combo, LCTL(KC_LALT)),
+    [COMBO_RALT_SHIFT] = COMBO(klquot_combo, LALT(KC_LSFT)),
+    [COMBO_RCTRL_ALT_SHIFT] = COMBO(jklquot_combo, LCTL(LALT(KC_LSFT))),
+
 };
 
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)

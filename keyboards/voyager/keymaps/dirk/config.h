@@ -16,8 +16,14 @@
  *    COMBOS                                                                                                            *
  * See https://docs.qmk.fm/#/feature_combo                                                                              *
  ************************************************************************************************************************/
-#define COMBO_COUNT 1
+// #define COMBO_COUNT 8
 #define COMBO_ONLY_FROM_LAYER 0
+// how quickly all combo keys must be pressed in succession to trigger
+#define COMBO_TERM 25
+// if a combo triggers a modifier, only trigger when the combo is held
+#define COMBO_MUST_HOLD_MODS
+// how long at least one of the combo keys must be held to trigger
+#define COMBO_HOLD_TERM 175
 
 #define TAPPING_TERM_PER_KEY
 #define RGB_MATRIX_STARTUP_SPD 60
