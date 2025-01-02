@@ -1,11 +1,17 @@
 /*
-  Set any config.h overrides for your specific keymap here.
-  See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
-*/
+ *  Set any config.h overrides for your specific keymap here.
+ *  See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
+ */
 #define ORYX_CONFIGURATOR
 #define IGNORE_MOD_TAP_INTERRUPT
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define FIRMWARE_VERSION u8"al9ov/jx4L7"
+/*
+ * Edit the layout under https://configure.zsa.io/voyager/layouts, so that it looks like what you want, then compile and download.
+ * The name of the downloaded file is something like "zsa_voyager_dirk_al9ov_BBnJA.bin". Alternativly, it can be seen here: https://configure.zsa.io/my_layout/view/al9ov
+ * The last two parts go into the firmware version here, seperated by a "/"
+ * This makes Keymapp use the keyboard layout
+ */
+#define FIRMWARE_VERSION u8"al9ov/BBnJA"
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
 #define LAYER_STATE_8BIT
@@ -19,7 +25,7 @@
 // #define COMBO_COUNT 8
 #define COMBO_ONLY_FROM_LAYER 0
 // how quickly all combo keys must be pressed in succession to trigger
-#define COMBO_TERM 25
+#define COMBO_TERM 35
 // if a combo triggers a modifier, only trigger when the combo is held
 #define COMBO_MUST_HOLD_MODS
 // how long at least one of the combo keys must be held to trigger

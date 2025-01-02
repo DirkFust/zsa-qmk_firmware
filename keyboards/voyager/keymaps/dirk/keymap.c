@@ -108,11 +108,11 @@ bool caps_word_press_user(uint16_t keycode) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_voyager(
-        KC_ESCAPE    , KC_Q    , KC_W   , KC_E    , KC_R     , KC_T   ,                              KC_Y       , KC_U      , KC_I    , KC_O   , KC_P   , KC_DEL ,
-        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G   ,                              KC_H       , KC_J      , KC_K    , KC_L   , CU_QUOT, CU_HASH,
-        CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B   ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
-        OSL(FUNCTION), CU_SLASH, KC_LALT, KC_LCTRL, KC_LSHIFT, KC_LGUI,                              KC_RGUI    , KC_LSHIFT , KC_LCTRL, KC_LALT, XXXXXXX, XXXXXXX,
-                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                              LT(MOVEMENT, KC_BSPACE), MT(MOD_LSFT, KC_SPACE)
+        KC_ESCAPE    , KC_Q    , KC_W   , KC_E    , KC_R     , KC_T    ,                              KC_Y       , KC_U      , KC_I    , KC_O   , KC_P   , KC_DEL ,
+        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,                              KC_H       , KC_J      , KC_K    , KC_L   , CU_QUOT, CU_HASH,
+        CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B    ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
+        OSL(FUNCTION), XXXXXXXX, XXXXXXX, CU_SLASH, KC_LGUI  , XXXXXXXX,                              XXXXXXXXX  , KC_RGUI   , XXXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
+                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), KC_SPACE
     ),
     [UMLAUT] = LAYOUT_voyager(
         _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, KC_PSCR,
@@ -130,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [MOVEMENT] = LAYOUT_voyager(
         XXXXXXX, KC_PGUP  , KC_HOME , KC_UP  , KC_END   , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, TO(GAMING),
-        XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, KC_LSFT, KC_LCTRL, KC_LALT, XXXXXXX, XXXXXXXXX ,
+        XXXXXXX, KC_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXXXX , //KC_LSFT, KC_LCTRL, KC_LALT, XXXXXXX, XXXXXXXXX ,
         XXXXXXX, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXXXX ,
         _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                 XXXXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXXXX ,
                                                  _______, _______,                 _______  , _______
@@ -150,10 +150,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                            _________, _________,                                                      _________, _________
     ),
     [FUNCTION] = LAYOUT_voyager(
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F1, KC_F2 , KC_F3 , KC_F4 , XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F5, KC_F6 , KC_F7 , KC_F8 , XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F9, KC_F10, KC_F11, KC_F12, XXXXXX,
-        TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, XXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
+        TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
                                           ______, ______,                                            ______, _________
     ),
 };
@@ -162,6 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *    COMBOS                                                                                                            *
  * See https://docs.qmk.fm/#/feature_combo                                                                              *
  * !! When new combos are declared, COMBO_COUNT in config.h must be adjusted to the new number! !!                      *
+ * I am using a "nifty trick" below, so this is not necessary. I don't fully understand this trick                      *
  ************************************************************************************************************************/
 
 // define combo names
