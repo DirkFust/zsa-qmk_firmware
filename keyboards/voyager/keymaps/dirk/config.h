@@ -11,7 +11,7 @@
  * The last two parts go into the firmware version here, seperated by a "/"
  * This makes Keymapp use the keyboard layout
  */
-#define FIRMWARE_VERSION u8"al9ov/BBnJA"
+#define FIRMWARE_VERSION u8"al9ov/zjj5j"
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
 #define LAYER_STATE_8BIT
@@ -32,6 +32,8 @@
 #define COMBO_HOLD_TERM 175
 
 #define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM 200 // 200ms
+
 #define RGB_MATRIX_STARTUP_SPD 60
 
 #undef ENABLE_RGB_MATRIX_BAND_SAT

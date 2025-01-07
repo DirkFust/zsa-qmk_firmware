@@ -98,6 +98,8 @@ bool caps_word_press_user(uint16_t keycode) {
     case KC_LEFT:
     case KC_RIGHT:
     case LT(MOVEMENT, KC_BSPACE):
+    case LT(MOVEMENT, KC_LEFT):
+    case LT(MOVEMENT, KC_RIGHT):
       return true;
 
     default:
@@ -111,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,                              KC_H       , KC_J      , KC_K    , KC_L   , DE_DQUO, CU_HASH,
         CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B    ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
         OSL(FUNCTION), XXXXXXXX, XXXXXXX, CU_SLASH, KC_LGUI  , XXXXXXXX,                              XXXXXXXXX  , KC_RGUI   , XXXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
-                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), KC_SPACE
+                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), HYPR_T(KC_SPACE)
     ),
     [UMLAUT] = LAYOUT_voyager(
         _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, KC_PSCR,
@@ -256,7 +258,12 @@ combo_t key_combos[] = {
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)
 // A key counts as HOLD if held longer than TAPPING_TERM, as TAP/DOUBLE TAP if shorter
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    return TAPPING_TERM;
+    switch (keycode) {
+        case HYPR_T(KC_SPACE):
+            return TAPPING_TERM * 2.5;
+        default:
+            return TAPPING_TERM;
+    }
 }
 
 // extern rgb_config_t rgb_matrix_config;
