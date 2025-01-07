@@ -57,7 +57,6 @@ static uint8_t current_layer = 0;
 enum custom_keycodes {
     TG_UML= ML_SAFE_RANGE,
     CU_SLASH, // / and backslash
-    CU_QUOT,  // " and '
     CU_HASH,  // # ans `
     CU_SS,    // ß
 };
@@ -109,7 +108,7 @@ bool caps_word_press_user(uint16_t keycode) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_voyager(
         KC_ESCAPE    , KC_Q    , KC_W   , KC_E    , KC_R     , KC_T    ,                              KC_Y       , KC_U      , KC_I    , KC_O   , KC_P   , KC_DEL ,
-        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,                              KC_H       , KC_J      , KC_K    , KC_L   , CU_QUOT, CU_HASH,
+        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,                              KC_H       , KC_J      , KC_K    , KC_L   , DE_DQUO, CU_HASH,
         CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B    ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
         OSL(FUNCTION), XXXXXXXX, XXXXXXX, CU_SLASH, KC_LGUI  , XXXXXXXX,                              XXXXXXXXX  , KC_RGUI   , XXXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
                            MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), KC_SPACE
@@ -156,6 +155,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                            XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
                                           ______, ______,                                            ______, _________
     ),
+};
+
+
+
+/************************************************************************************************************************
+ *    KEY_OVERRIDES                                                                                                     *
+ * See https://docs.qmk.fm/features/key_overrides                                                                       *
+ * Key overrides allow you to override modifier-key combinations to send a different modifier-key combination or        *
+ * perform completely custom actions.
+ *
+ * !! THE TYPE OF key_overrides IS DIFFERENT THAN IN THE DOCS. I SUPPOSE THIS IS BECAUSE OF THE ZSA BRANCH.
+ * !! IN THE DOCS IT'S *key_overrides, BUT I NEED **key_overrides (DOUBLE ASTERISKS)                                                                                  *
+ *                                                                                                                      *
+ * I use this method for the quot-key instead of the method used for CU_SLASH and others becaus then the mods with the  *
+ * DE_DQUO key will not work correctly                                                                                  *
+ ************************************************************************************************************************/
+const key_override_t quot_key_override = ko_make_basic(MOD_MASK_SHIFT, DE_DQUO, DE_QUOT);
+// This globally defines all key overrides to be used
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &quot_key_override,
+    NULL // Null terminate the array of overrides!
 };
 
 /************************************************************************************************************************
@@ -205,11 +225,11 @@ const uint16_t PROGMEM asdf_combo[] = {KC_A, KC_S, KC_D, KC_F, COMBO_END};
 
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM kl_combo[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM lquot_combo[] = {KC_L, CU_QUOT, COMBO_END};
+const uint16_t PROGMEM lquot_combo[] = {KC_L, DE_DQUO, COMBO_END};
 const uint16_t PROGMEM jkl_combo[] = {KC_J, KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM jkquot_combo[] = {KC_J, KC_K, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM klquot_combo[] = {KC_K, KC_L, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM jklquot_combo[] = {KC_J, KC_K, KC_L, CU_QUOT, COMBO_END};
+const uint16_t PROGMEM jkquot_combo[] = {KC_J, KC_K, DE_DQUO, COMBO_END};
+const uint16_t PROGMEM klquot_combo[] = {KC_K, KC_L, DE_DQUO, COMBO_END};
+const uint16_t PROGMEM jklquot_combo[] = {KC_J, KC_K, KC_L, DE_DQUO, COMBO_END};
 
 // map combo names to their keys and the key they trigger
 combo_t key_combos[] = {
@@ -313,8 +333,6 @@ bool process_record_user_keys(uint16_t keycode, keyrecord_t *record) {
 switch (keycode) {
     case CU_SLASH:
         return key_and_shift(DE_SLSH, DE_BSLS, record); // slash and backslash
-    case CU_QUOT:
-        return key_and_shift(DE_DQUO, DE_QUOT, record); // " and '
     case CU_HASH:
         if (record->event.pressed) {
             if (get_mods() & MOD_MASK_SHIFT) {
