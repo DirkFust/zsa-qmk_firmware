@@ -5,13 +5,14 @@
 #define ORYX_CONFIGURATOR
 #define IGNORE_MOD_TAP_INTERRUPT
 #define USB_SUSPEND_WAKEUP_DELAY 0
+
 /*
  * Edit the layout under https://configure.zsa.io/voyager/layouts, so that it looks like what you want, then compile and download.
  * The name of the downloaded file is something like "zsa_voyager_dirk_al9ov_BBnJA.bin". Alternativly, it can be seen here: https://configure.zsa.io/my_layout/view/al9ov
  * The last two parts go into the firmware version here, seperated by a "/"
  * This makes Keymapp use the keyboard layout
  */
-#define FIRMWARE_VERSION u8"al9ov/zjj5j"
+#define FIRMWARE_VERSION u8"al9ov/LvaMwX"
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
 #define LAYER_STATE_8BIT
@@ -24,12 +25,15 @@
  ************************************************************************************************************************/
 // #define COMBO_COUNT 8
 #define COMBO_ONLY_FROM_LAYER 0
-// how quickly all combo keys must be pressed in succession to trigger
-#define COMBO_TERM 35
+
+// how quickly all combo keys must be pressed in succession to trigger (ms)
+#define COMBO_TERM 45
+
+// how long (ms) at least one of the combo keys must be held to trigger
+#define COMBO_HOLD_TERM 150
+
 // if a combo triggers a modifier, only trigger when the combo is held
 #define COMBO_MUST_HOLD_MODS
-// how long at least one of the combo keys must be held to trigger
-#define COMBO_HOLD_TERM 175
 
 #define TAPPING_TERM_PER_KEY
 #define TAPPING_TERM 200 // 200ms

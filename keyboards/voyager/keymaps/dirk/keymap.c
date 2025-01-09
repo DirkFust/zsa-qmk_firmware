@@ -49,7 +49,6 @@
 
 #define TAB_LEFT LCTL(LSFT(KC_TAB))
 #define TAB_RIGHT LCTL(KC_TAB)
-#define CU_HYPR LCTL(LWIN(LALT())
 
 static bool is_umlaut_active = false;
 static uint8_t current_layer = 0;
@@ -113,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,                              KC_H       , KC_J      , KC_K    , KC_L   , DE_DQUO, CU_HASH,
         CAPS_WORD    , KC_Z    , KC_X   , KC_C    , KC_V     , KC_B    ,                              KC_N       , KC_M      , KC_COMMA, KC_DOT , DE_MINS, DE_PLUS,
         OSL(FUNCTION), XXXXXXXX, XXXXXXX, CU_SLASH, KC_LGUI  , XXXXXXXX,                              XXXXXXXXX  , KC_RGUI   , XXXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
-                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), HYPR_T(KC_SPACE)
+                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,                              LT(MOVEMENT, KC_BSPACE), KC_SPACE
     ),
     [UMLAUT] = LAYOUT_voyager(
         _______, DE_AT  , _____, DE_EURO, _______, _______,                             _______, DE_UDIA, _______, DE_ODIA, _______, KC_PSCR,
@@ -259,8 +258,8 @@ combo_t key_combos[] = {
 // A key counts as HOLD if held longer than TAPPING_TERM, as TAP/DOUBLE TAP if shorter
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case HYPR_T(KC_SPACE):
-            return TAPPING_TERM * 2.5;
+        // case HYPR_T(KC_SPACE):
+        //     return TAPPING_TERM * 2.5;
         default:
             return TAPPING_TERM;
     }
